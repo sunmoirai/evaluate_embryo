@@ -1,0 +1,11 @@
+Training/
+Validation/
+test_images/
+*.png
+*.jpg
+*.json
+*.jpeg
+*.bmp
+*.csv
+*.pth
+*.zip
