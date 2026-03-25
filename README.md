@@ -91,6 +91,7 @@ embryo_ai/
 ├── requirements.txt          # 설치 필요한 패키지 목록
 ├── README.md                 # 프로젝트 설명 파일
 └── .gitignore                # Git 제외 대상 설정
+```
 📦 모델 파일 (중요)
 
 ⚠️ 모델 파일은 GitHub에 포함되어 있지 않습니다.
@@ -101,6 +102,7 @@ models/
 ├── embryo_stage_resnet18.pth
 ├── embryo_icm_resnet18_best.pth
 ├── embryo_te_resnet18_best.pth
+```
 🖥️ 실행 방법
 1. 환경 설치
 pip install -r requirements.txt
