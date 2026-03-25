@@ -1,154 +1,105 @@
-🧬 Embryo AI Analysis (Prototype)
+# 🧬 Embryo AI Analysis (Prototype)
 
-배아 이미지 데이터를 기반으로 Stage / ICM / TE를 예측하고, 이식 가능 여부를 판단하는 딥러닝 기반 프로토타입 시스템입니다.
+> **Deep Learning based Embryo Quality Assessment System**
+> 배아 이미지를 분석하여 발달 단계(Stage)와 등급(ICM/TE)을 예측하고 이식 적합성을 보조 판단하는 딥러닝 프로토타입입니다.
 
-🚀 프로젝트 개요
+---
 
-본 프로젝트는 난임 시술 과정에서 생성되는 배아 이미지를 활용하여:
+## 🚀 프로젝트 개요
+본 프로젝트는 난임 시술 과정에서 생성되는 배아 이미지를 활용하여 의료진의 의사결정을 보조하는 AI 파이프라인을 구축합니다.
 
-배아 발달 단계 (Stage)
+* **핵심 기능**: 배아 이미지 자동 분류 및 Gardner 기준 기반 이식 가능 여부 판단 보조
+* **분석 항목**: 
+    * **Stage**: 발달 단계 (1~4 / 5~6)
+    * **ICM (Inner Cell Mass)**: 내부세포괴 등급 (A/B/C)
+    * **TE (Trophectoderm)**: 영양외배엽 등급 (A/B/C)
 
-내부세포괴 (ICM)
+---
 
-영양외배엽 (TE)
+## 🧠 시스템 구조 (System Architecture)
+본 시스템은 3개의 독립적인 **ResNet18** 모델이 병렬로 예측을 수행한 후, Rule-based 로직으로 최종 결과를 도출합니다.
 
-를 자동 분류하고,
-이를 기반으로 이식 가능 여부를 보조적으로 판단하는 AI 모델을 구현합니다.
+1. **Image Input**: 배아 이미지 입력 (224x224)
+2. **Multi-Model Inference**: Stage, ICM, TE 각각의 전용 모델이 예측 수행
+3. **Rule-based Decision**: Gardner Grading 기준에 따른 이식 가능 여부 출력
 
-👉 본 모델은 의료적 판단을 대체하지 않으며, 판단을 보조하는 도구를 목표로 합니다.
+---
 
-🧠 주요 기능
+## 🧪 모델 정보 (Model Details)
+* **Backbone**: `ResNet18` (Pretrained)
+* **Framework**: `PyTorch`
+* **Input Size**: 224 x 224
+* **Augmentation**: 
+    * `RandomHorizontalFlip`, `RandomRotation`, `ColorJitter`
+* **이식 가능 판단 기준**: 
+    ```python
+    if stage == "5~6" and icm in ["A", "B"] and te in ["A", "B"]:
+        return "이식 가능 (Transferable)"
+    ```
 
-📷 배아 이미지 입력
+---
 
-🧬 Stage (1 ~ 4 / 5 ~ 6) 분류
+## 📊 성능 분석 (Validation Accuracy)
+| 항목 | 정확도 (Accuracy) | 비고 |
+| :--- | :--- | :--- |
+| **Stage** | **~99%** | 형태적 차이가 명확하여 매우 높은 성능 기록 |
+| **ICM** | **~50%** | 데이터 부족 및 라벨링 주관성으로 개선 필요 |
+| **TE** | **~59%** | 형태 구분 난이도가 높음 |
 
-🧬 ICM (A/B/C) 분류
+> **⚠️ 성능 이슈 분석**: ICM/TE 정확도가 낮은 이유는 배아학자 간의 라벨링 주관성 편차와 미세한 형태적 차이 때문입니다. 향후 더 큰 데이터셋과 Attention 모델 도입이 필요합니다.
 
-🧬 TE (A/B/C) 분류
+---
 
-✅ Gardner 기준 기반 이식 가능 여부 판단
-
-📊 확률 기반 결과 출력
-
-🏗️ 시스템 구조
-Image Input
-    ↓
-[Stage Model] → Stage 예측
-[ICM Model]   → ICM 예측
-[TE Model]    → TE 예측
-    ↓
-Rule-based 판단
-    ↓
-이식 가능 여부 출력
-🧪 모델 정보
-
-Backbone: ResNet18 (Pretrained)
-
-Framework: PyTorch
-
-Input Size: 224x224
-
-Augmentation:
-
-RandomHorizontalFlip
-
-RandomRotation
-
-ColorJitter
-
-📊 성능 (Validation 기준)
-항목	정확도
-Stage	~99%
-ICM	~50%
-TE	~59%
-
-👉 ICM / TE 정확도가 낮은 이유:
-
-데이터 수 부족
-
-라벨링 주관성 (배아학자 간 편차)
-
-형태 구분 난이도
-
-⚠️ 주의사항
-
-본 모델은 의료용 인증 모델이 아닙니다
-
-실제 임상 판단에는 사용할 수 없습니다
-
-연구 / 프로토타입 용도입니다
-
-📁 프로젝트 구조
+## 📁 프로젝트 구조
 ```text
 embryo_ai/
-├── app_embryo_prototype.py   # Streamlit UI 실행 파일
-├── embryo_dataset.py         # Dataset 커스텀 클래스
-├── train_.py                 # 모델 학습 스크립트
-├── evaluate_.py              # 모델 평가 스크립트
-├── models/                   # 학습된 모델 저장 폴더 (기본 비어있음)
-├── data/                     # 학습 데이터 폴더 (기본 비어있음)
-├── requirements.txt          # 설치 필요한 패키지 목록
-├── README.md                 # 프로젝트 설명 파일
-└── .gitignore                # Git 제외 대상 설정
+├── app_embryo_prototype.py    # Streamlit UI 실행 파일
+├── embryo_dataset.py          # Dataset 커스텀 클래스
+├── train_.py                  # 모델 학습 스크립트
+├── evaluate_.py               # 모델 평가 스크립트
+├── models/                    # 학습된 모델(.pth) 저장 폴더
+├── data/                      # 학습 데이터 폴더
+└── requirements.txt           # 패키지 목록
 ```
-📦 모델 파일 (중요)
+---
 
-⚠️ 모델 파일은 GitHub에 포함되어 있지 않습니다.
+## 🛠️ 실행 방법 (Usage)
 
-아래 파일을 models/ 폴더에 직접 넣어야 합니다:
-```text
-models/
-├── embryo_stage_resnet18.pth
-├── embryo_icm_resnet18_best.pth
-├── embryo_te_resnet18_best.pth
-```
-🖥️ 실행 방법
-1. 환경 설치
+### 1. 환경 설치
+```bash
 pip install -r requirements.txt
-2. 실행
+```
+
+### 2. 모델 파일 배치
+`models/` 폴더 내에 아래 가중치(`.pth`) 파일이 반드시 존재해야 합니다.
+
+* `embryo_stage_resnet18.pth`
+* `embryo_icm_resnet18_best.pth`
+* `embryo_te_resnet18_best.pth`
+
+### 3. 서비스 실행
+아래 명령어를 터미널에 입력하여 대시보드를 실행합니다.
+
+```bash
 streamlit run app_embryo_prototype.py
-3. 접속
+```  
 
-브라우저에서:
+> **접속 주소**: [http://localhost:8501](http://localhost:8501)
 
-http://localhost:8501
-🧬 이식 가능 판단 기준 (Prototype)
-if stage == "5~6" and icm in ["A", "B"] and te in ["A", "B"]:
-    return "이식 가능"
-else:
-    return "추가 평가 필요"
+---
 
-👉 실제 병원에서는 Gardner grading 기준을 사용합니다.
-
-📊 데이터
-
-AI Hub 배아 이미지 데이터 사용
-
-Time-lapse + Microscope 이미지 포함
-
-라벨:
-
-Stage
-
-ICM
-
-TE
-
-👨‍💻 개발 목적
-
-의료 AI 모델 구조 이해
-
-이미지 기반 classification pipeline 구현
-
-실제 산업 데이터 기반 모델링 경험
-
-📜 License
-
+## ⚠️ 주의사항 (Disclaimer)
 본 프로젝트는 연구 및 포트폴리오 용도로 제작되었습니다.
 
-🙋‍♂️ Author
+의료기기 인증을 받지 않은 프로토타입이므로, 실제 임상적 판단이나 의료 목적으로는 사용할 수 없습니다.
 
-AI / Bioinformatics 학습 프로젝트
+---
 
-Embryo AI Prototype 개발
+## 👨‍💻 Author
+**AI / Bioinformatics Researcher**
+
+* **배아 이미지 기반 Classification 파이프라인 설계 및 구현**
+* **실제 산업 데이터를 활용한 의료 AI 모델링 및 성능 최적화 경험**
+* **데이터 전처리 및 하이퍼파라미터 튜닝을 통한 모델 성능 개선**
+
+---
