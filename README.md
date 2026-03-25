@@ -80,25 +80,23 @@ TE	~59%
 연구 / 프로토타입 용도입니다
 
 📁 프로젝트 구조
-1.embryo_ai/
-│
-├── app_embryo_prototype.py   # Streamlit UI
-├── embryo_dataset.py        # Dataset 클래스
-├── train_*.py               # 학습 코드
-├── evaluate_*.py            # 평가 코드
-│
-├── models/                  # (비어있음)
-├── data/                    # (비어있음)
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
+```text
+embryo_ai/
+├── app_embryo_prototype.py   # Streamlit UI 실행 파일
+├── embryo_dataset.py         # Dataset 커스텀 클래스
+├── train_.py                 # 모델 학습 스크립트
+├── evaluate_.py              # 모델 평가 스크립트
+├── models/                   # 학습된 모델 저장 폴더 (기본 비어있음)
+├── data/                     # 학습 데이터 폴더 (기본 비어있음)
+├── requirements.txt          # 설치 필요한 패키지 목록
+├── README.md                 # 프로젝트 설명 파일
+└── .gitignore                # Git 제외 대상 설정
 📦 모델 파일 (중요)
 
 ⚠️ 모델 파일은 GitHub에 포함되어 있지 않습니다.
 
 아래 파일을 models/ 폴더에 직접 넣어야 합니다:
-
+```text
 models/
 ├── embryo_stage_resnet18.pth
 ├── embryo_icm_resnet18_best.pth
